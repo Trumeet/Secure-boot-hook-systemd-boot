@@ -1,0 +1,17 @@
+#!/bin/bash
+SCRIPTPATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+if [ -z "$1" ] 
+then
+    echo "Looking for unsigned files"
+    /usr/bin/find /boot/ \
+        -type f \
+        \( -name 'vmlinuz-*' \
+        -o -name 'systemd-*' \) \
+        -exec $SCRIPTPATH {} \;
+else
+    if ! /usr/bin/sbverify --list $1 2>/dev/null | /usr/bin/grep -q 'signature certificates'
+    then 
+        echo "Signing $1..."
+        sudo /usr/bin/sbsign --key /etc/keys/db.key --cert /etc/keys/db.crt --output $1 $1
+    fi
+fi

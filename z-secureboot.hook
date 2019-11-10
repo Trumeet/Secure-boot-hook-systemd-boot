@@ -1,0 +1,15 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = linux
+Target = systemd
+
+[Action]
+Description = Signing Kernel for SecureBoot
+When = PostTransaction
+Exec = /usr/bin/sign-boot
+Depends = sbsigntools
+Depends = findutils
+Depends = grep
+Depends = bash
